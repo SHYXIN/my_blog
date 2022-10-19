@@ -1,0 +1,22 @@
+{% extends "blog/base.html" %}
+{% block title %}我的博客{% endblock %}
+{% block content %}
+  <h1>我的博客</h1>
+  {% for post in posts %}
+    <h2>
+      <a href="{{ post.get_absolute_url }}">
+        {{ post.title }}
+      </a>
+    </h2>
+    <p class="date">
+      Published {{ post.publish }} by {{ post.author }}
+    </p>
+    {{ post.body|truncatewords:30|linebreaks }}
+  {% endfor %}
+  {% if page_obj %}
+    {% include 'pagination.html' with page=page_obj %}
+  {% else %}
+    {% include 'pagination.html' with page=posts %}
+  {% endif%}
+{% endblock %}
+
