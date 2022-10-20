@@ -11,4 +11,31 @@
       分享博客
     </a>
   </p>
+  {% with comments.count as total_comments %}
+    <h2>
+      共{{total_comments}}条评论
+    </h2>
+  {% endwith%}
+  
+  {% for comment in comments%}
+    <div class="comment">
+      <p class="info">
+        第{{ forloop.counter }}条评论-{{comment.name}}-{{comment.created}}
+      </p>
+      {{comment.body|linebreaks}}
+    </div>
+  {% empty %}
+    <p>还没有评论</p>
+  {% endfor%}
+
+  {% if new_comment %}
+    <h2>评论成功</h2>
+  {% else%}
+    <h2>添加新评论</h2>
+    <form method="post">
+      {{comment_form.as_p}}
+      {% csrf_token %}
+      <input type="submit" value="提交">
+    </form>
+  {% endif %}
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post
+from .models import Post, Comment
 # Register your models here.
 # admin.site.register(Post)
 
@@ -13,5 +13,9 @@ class PostAdmin(admin.ModelAdmin):
     date_hierarchy = 'publish'  # 列表上方会增加一个可以钻取的发布时间小控件
     ordering = ('status', 'publish') # 排序设置，按照状态、发布时间
 
-    
-    
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'post', 'created', 'active')
+    list_filter = ('active', 'created', 'updated')
+    search_fields = ('name', 'email', 'body')
+

@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from .models import Post
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic import ListView
-from .form import EmailPostForm
+from .form import CommentForm, EmailPostForm
 from django.core.mail import send_mail
 
 
@@ -29,7 +29,31 @@ def post_detail(request, year, month, day, post):
                                    publish__year=year,
                                    publish__month=month,
                                    publish__day=day)
-    return render(request, 'blog/post/detail.html', {'post': post})
+    # 找到这个post所有的comment
+    comments = post.comments.filter(active=True)
+
+    new_comment = None
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        
+        # 先调用方法如果非法，就会添加error
+        if comment_form.is_valid():
+            # 创建了新评论但是不提交到数据库中
+            new_comment = comment_form.save(commit=False)
+            # 将post添加到commnet中
+            new_comment.post = post
+            # 最后提交，保存数据库中
+            new_comment.save()
+                        
+    else:
+        comment_form = CommentForm()
+    
+    
+    return render(request, 'blog/post/detail.html', {'post': post,
+                                                     'comments':comments,
+                                                     'new_comment':new_comment,
+                                                     'comment_form': comment_form,
+                                                     })
 
 
 class PostListView(ListView):

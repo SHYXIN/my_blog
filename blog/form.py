@@ -1,4 +1,5 @@
 from django import forms
+from .models import Comment
 
 # 新建一个表单
 # form.Form 建立一个标准的表单
@@ -13,4 +14,9 @@ class EmailPostForm(forms.Form):
     comments = forms.CharField(required=False,
                                widget=forms.Textarea,
                                label='评论')
+
+class CommentForm(forms.ModelForm):
     
+    class Meta:
+        model = Comment  # 指定对应的model
+        fields = ('name', 'email', 'body')  # 展示在前端，需要用户填写的字段
