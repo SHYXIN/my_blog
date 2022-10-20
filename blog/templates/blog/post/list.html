@@ -8,10 +8,10 @@
         {{ post.title }}
       </a>
     </h2>
-    <p class="date">
-      Published {{ post.publish }} by {{ post.author }}
-    </p>
     {{ post.body|truncatewords:30|linebreaks }}
+    <p class="date">
+      发布时间： {{ post.publish }} 作者：{{ post.author }}
+    </p>
   {% endfor %}
   {% if page_obj %}
     {% include 'pagination.html' with page=page_obj %}

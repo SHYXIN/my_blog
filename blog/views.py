@@ -2,6 +2,9 @@ from django.shortcuts import get_object_or_404, render
 from .models import Post
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic import ListView
+from .form import EmailPostForm
+from django.core.mail import send_mail
+
 
 # Create your views here.
 def post_list(request):
@@ -35,3 +38,32 @@ class PostListView(ListView):
     context_object_name = 'posts'
     paginate_by: int = 3
     
+
+def post_share(request, post_id):
+    """分享博客"""
+    post = get_object_or_404(Post, id=post_id, status='published')
+    sent = False
+    if request.method == 'POST':
+        # 是post请求
+        form = EmailPostForm(request.POST)
+        if form.is_valid():
+            # 表单校验通过，如果不通过，则会增加error信息
+            cd = form.cleaned_data
+            # 准备发送邮件
+            post_url = request.build_absolute_uri(post.get_absolute_url())
+            subject = f"{cd['name']}推荐你阅读{post.title}"
+            message = f"{post.title}链接为{post_url}\n\n" \
+                f"{cd['name']} 的评论为 {cd['comments']}"
+            send_mail(subject, message,
+                    #   'x3280877@gmail.com', 
+                      'admin@myblog.com', 
+                      [cd['to']])
+            sent = True
+    else:
+        # get请求初始化部件，展示出来
+        form = EmailPostForm()
+    
+    return render(request, 'blog/post/share.html', {'form': form,
+                                                    'post':post,
+                                                    'sent':sent,
+                                                    })

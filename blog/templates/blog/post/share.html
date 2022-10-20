@@ -1,0 +1,23 @@
+{% extends 'blog/base.html '%}
+{% block title %}分享博客{% endblock title %}
+{% block content%}
+    {% if sent %}
+    <h1>邮件发送成功</h1>
+    <p>
+        "{{post.title}}" 被成功发送到 {{form.cleaned_data.to}} 
+    </p>
+    {% else %}
+        <h1>通过邮件分享"{{post.title}}"</h1>
+        <form method="post">
+            {% for field in form %}
+            <div>
+              {{ field.label_tag }} {{ field }}
+              {{ field.errors }}
+            </div>
+          {% endfor %}
+            {% csrf_token %}
+            <input type="submit" value="发送电子邮件">
+        </form>
+    {% endif %}
+
+{% endblock content%}
