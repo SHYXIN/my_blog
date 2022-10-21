@@ -5,7 +5,7 @@ from .models import Post, Comment
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'slug', 'author', 'publish', 'status')  # 展示文章列表
+    list_display = ('title', 'slug', 'author', 'publish', 'status',)  # 展示文章列表
     list_filter = ('status', 'created', 'publish', 'author')  # 右侧过滤器
     search_fields = ('title', 'body')  # 上方搜索框
     prepopulated_fields = {'slug': ('title',)}  # 新增post时如是英文自动填充，链接跟随标题

@@ -3,12 +3,19 @@ from .models import Post
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic import ListView
 from .form import CommentForm, EmailPostForm
-from django.core.mail import send_mail
+from django.core.mail import send_mail  # 发邮件用
+from taggit.models import Tag  # 用来标签的
+from django.db.models import Count  # 推荐推荐
+
 
 
 # Create your views here.
-def post_list(request):
+def post_list(request, tag_slug=None):
     objects_list = Post.published.all()
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        objects_list = objects_list.filter(tags__in=[tag])
     paginator = Paginator(objects_list, 3)
     page = request.GET.get('page')
     try:
@@ -20,7 +27,10 @@ def post_list(request):
         # 如果超出索引，则返回最后一页
         posts = paginator.page(paginator.num_pages)
     
-    return render(request, 'blog/post/list.html', {'posts':posts, 'page': page})
+    return render(request, 'blog/post/list.html', {'posts':posts, 
+                                                   'page': page,
+                                                   'tag':tag,
+                                                   })
 
 def post_detail(request, year, month, day, post):
 
@@ -48,11 +58,17 @@ def post_detail(request, year, month, day, post):
     else:
         comment_form = CommentForm()
     
+    # 推荐相似博客
+    post_tags_ids = post.tags.values_list('id', flat=True)  # 得到tag的id列表
+    similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(id=post.id)  # 得到相似博客，同时排除自己
+    # 计算tags的数量，命名为same_tags，按照tags的数量降序，发布时间降序
+    similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags', '-publish')[:4]
     
     return render(request, 'blog/post/detail.html', {'post': post,
                                                      'comments':comments,
                                                      'new_comment':new_comment,
                                                      'comment_form': comment_form,
+                                                     'similar_posts':similar_posts,
                                                      })
 
 

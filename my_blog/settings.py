@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     
     # 添加自己的博客应用
     'blog.apps.BlogConfig',
+    'taggit',  # 标签功能
 ]
 
 MIDDLEWARE = [
@@ -130,11 +131,25 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # 邮件设置
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 在控制台展示
 
 
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # 设置邮件服务器，可有可无
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_HOST_USER = 'x3280877@gmail.com'
-# EMAIL_HOST_PASSWORD = 'WANG33102'
+# EMAIL_HOST_PASSWORD = 'tmvvxwbmdknwrczk'
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
+
+# # 发送邮件配置
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# # smpt服务地址
+# EMAIL_HOST = 'smtp.qq.com'
+# EMAIL_PORT = 25  # 端口默认都是25不需要修改
+# # 发送邮件的邮箱，需要配置开通SMTP
+# EMAIL_HOST_USER = '847854712@qq.com'
+# # 在邮箱中设置的客户端授权密码
+# # 此处的EMAIL_HOST_PASSWORD是用QQ邮箱授权码登录
+# EMAIL_HOST_PASSWORD = 'xxxxxxxxxxxxxxxxxxxxxx'
+# # 收件人看到的发件人
+# EMAIL_FROM = '152xxxx7756@sina.cn'

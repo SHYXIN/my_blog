@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth.models import User
 # Create your models here.
-
+from taggit.managers import TaggableManager
 
 class PublishedManager(models.Manager):
 
@@ -33,6 +33,9 @@ class Post(models.Model):
     objects = models.Manager()  # 默认的管理器
     published = PublishedManager()  # 我们自定义的模型管理器
 
+    # 添加标签
+    tags = TaggableManager()
+    
     class Meta:
         ordering = ('-publish',)
 

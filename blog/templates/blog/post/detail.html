@@ -11,6 +11,15 @@
       分享博客
     </a>
   </p>
+  <h2>推荐阅读</h2>
+  {% for post in similar_posts %}
+    <p>
+      <a href="{{post.get_absolute_url}}">{{post.title}}</a>
+    </p>
+  {% empty %}
+    暂无推荐内容
+  {% endfor %}
+
   {% with comments.count as total_comments %}
     <h2>
       共{{total_comments}}条评论
