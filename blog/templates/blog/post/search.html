@@ -1,0 +1,28 @@
+{% extends 'blog/base.html'%}
+{% load blog_tags %}
+{% block title %}检索页面{% endblock title%}
+
+{% block content%}
+{% if query %}
+    <h1>"{{query}}"搜索的结果</h1>
+    <h3>
+        {% with results.count as total_results %}
+        共找到了{{total_results}}结果
+        {% endwith%}
+    </h3>
+    {% for post in results %}
+        <h4><a href="{{post.get_absolute_url}}">{{post.title}}</a></h4>
+        {{post.body|markdown|truncatewords_html:5}}
+    {% empty %}
+    <p>没找到相关信息</p>
+    {% endfor%}
+    <p><a href="{% url "blog:post_search" %}">再次搜索</a></p>
+
+{% else %}
+    <form method="get">
+        {{form.as_p}}
+        <input type="submit" value="搜索">
+    </form>
+{% endif %}
+
+{% endblock content%}

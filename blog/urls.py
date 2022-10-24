@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .feeds import LastestPostFeeds
 
 app_name = 'blog'
 
@@ -13,5 +14,11 @@ urlpatterns = [
     path('tag/<slug:tag_slug>/',views.post_list, name='post_list_by_tag'),
     
     path('<int:post_id>/share/', views.post_share, name='post_share'),
+    
+    # 增加feed
+    path('feed/',LastestPostFeeds(), name='post_feed'),
+    
+    # 增加全文搜索功能
+    path('search/',views.post_search, name='post_search'),
 
 ]

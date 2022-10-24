@@ -20,3 +20,8 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment  # 指定对应的model
         fields = ('name', 'email', 'body')  # 展示在前端，需要用户填写的字段
+        
+
+# 搜索视图
+class SearchForm(forms.Form):
+    query = forms.CharField(label='搜索')
